@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online image, video, and PDF tools. Compress, edit, and enhance with AI-powered features.">
+    <meta name="keywords" content="image compression, video editing, background removal, PDF tools">
+    <title>Online Image & PDF Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: #f4f4f4;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #333;
+            color: white;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 50px;
+            background: url('banner.jpg') no-repeat center center/cover;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+        }
+
+        .hero button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Tools Grid */
+        .tools {
+            padding: 20px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tool {
+            background: white;
+            padding: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        /* Image Compression Section */
+        .image-compression {
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 50%;
+            border-radius: 10px;
+        }
+
+        canvas {
+            max-width: 100%;
+            display: block;
+            margin: 10px auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 15px;
+            background: #333;
+            color: white;
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">📷 ToolsSite</div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Image Tools</a></li>
+                <li><a href="#">PDF Tools</a></li>
+                <li><a href="#">Video Tools</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Enhance & Optimize Your Media</h1>
+        <p>Compress images, edit videos, remove backgrounds, and more!</p>
+        <button>Explore Tools</button>
+    </section>
+
+    <!-- AdSense Placement -->
+    <div class="adsense">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-xxxxxxxxxxxxxx"
+             data-ad-slot="xxxxxxxxxx"
+             data-ad-format="auto"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- Tools Section -->
+    <section class="tools">
+        <h2>Our Tools</h2>
+        <div class="tool-grid">
+            <div class="tool">
+                <h3>Image Compression</h3>
+                <p>Reduce image size while maintaining quality.</p>
+            </div>
+            <div class="tool">
+                <h3>Background Removal</h3>
+                <p>Remove backgrounds from images with AI.</p>
+            </div>
+            <div class="tool">
+                <h3>Video Editing</h3>
+                <p>Enhance and add effects to videos.</p>
+            </div>
+            <div class="tool">
+                <h3>PDF Converter</h3>
+                <p>Convert and merge PDF files easily.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Compression Tool -->
+    <section class="image-compression">
+        <h2>Image Compression Tool</h2>
+        <input type="file" id="uploadImage" accept="image/*">
+        <label for="quality">Compression Level:</label>
+        <input type="range" id="quality" min="0.1" max="1" step="0.1" value="0.8">
+        <p>Quality: <span id="qualityValue">0.8</span></p>
+        <canvas id="canvas"></canvas>
+        <button id="downloadBtn">Download Compressed Image</button>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 ToolsSite. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const uploadImage = document.getElementById("uploadImage");
+            const qualityInput = document.getElementById("quality");
+            const qualityValue = document.getElementById("qualityValue");
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            const downloadBtn = document.getElementById("downloadBtn");
+
+            let originalImage = null;
+
+            // Update quality display
+            qualityInput.addEventListener("input", () => {
+                qualityValue.textContent = qualityInput.value;
+            });
+
+            // Handle image upload
+            uploadImage.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+
+                if (file && file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.src = e.target.result;
+                        img.onload = function() {
+                            originalImage = img;
+                            compressImage(img, qualityInput.value);
+                        };
+                    };
+                }
+            });
+
+            // Compress image based on quality input
+            function compressImage(image, quality) {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+                const compressedImage = canvas.toDataURL("image/jpeg", quality);
+                downloadBtn.onclick = () => downloadImage(compressedImage);
+            }
+
+            function downloadImage(dataUrl) {
+                const link = document.createElement("a");
+                link.href = dataUrl;
+                link.download = "compressed-image.jpg";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            qualityInput.addEventListener("change", () => {
+                if (originalImage) {
+                    compressImage(originalImage, qualityInput.value);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
